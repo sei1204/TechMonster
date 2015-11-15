@@ -10,20 +10,31 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var timer: NSTimer!
+    var moveValueUpTimer: NSTimer!
     var enemyTimer: NSTimer!
-    var enemy: Enemy!
-    var player: Player!
+    var enemy: Enemy = Enemy(name: "ドラゴン", imageName: "monster.png")
+    var player: Player = Player(name: "紙", imageName: "yusya.png")
     
     //    Make TechDraUtility
     let util: TechDraUtility = TechDraUtility()
     
-    @IBOutlet var backgroundImageView: UIImageView!
+    var isPlayerMoveValueMax: Bool! = true
+    
+    
     @IBOutlet var attackButton: UIButton!
+    @IBOutlet var fireButton: UIButton!
+    @IBOutlet var tameruButton: UIButton!
+    
+    @IBOutlet var backgroundImageView: UIImageView!
     @IBOutlet var enemyImageView: UIImageView!
     @IBOutlet var playerImageView: UIImageView!
+    
     @IBOutlet var enemyHPBar: UIProgressView!
+    @IBOutlet var enemyMoveBar: UIProgressView!
     @IBOutlet var playerHPBar: UIProgressView!
+    @IBOutlet var playerMoveBar: UIProgressView!
+    @IBOutlet var playerTPBar: UIProgressView!
+    
     @IBOutlet var enemyNameLabel: UILabel!
     @IBOutlet var playerNameLabel: UILabel!
     
@@ -34,14 +45,13 @@ class ViewController: UIViewController {
         playerHPBar.transform = CGAffineTransformMakeScale(1.0,4.0)
         initStatus()
         
-        enemyTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(enemy.speed), target: self, selector: "enemyAttack", userInfo: nil, repeats: true)
-        enemyTimer.fire()
+        moveValueUpTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "moveValueUp", userInfo: nil, repeats: true)
+        moveValueUpTimer.fire()
     }
     
     
     func initStatus() {
-        enemy = Enemy()
-        player = Player()
+        
         
         enemyNameLabel.text = enemy.name
         playerNameLabel.text = player.name
@@ -49,14 +59,40 @@ class ViewController: UIViewController {
         enemyImageView.image = enemy.image
         playerImageView.image = player.image
         
+        enemyHPBar.transform = CGAffineTransformMakeScale(1.0, 4.0)
+        playerHPBar.transform = CGAffineTransformMakeScale(1.0, 4.0)
+        playerHPBar.transform = CGAffineTransformMakeScale(1.0, 4.0)
+        
         enemyHPBar.progress = enemy.currentHP / enemy.maxHP
         playerHPBar.progress = player.currentHP / player.maxHP
+        playerTPBar.progress = player.currentHP / player.maxHP
         
         cureHP()
     }
     
     override func viewDidAppear(animated: Bool) {
         util.playBGM("BGM_battle001")
+    }
+    
+    func moveValueUp() {
+        
+        player.currentMovePoint = player.currentMovePoint + 1
+        playerMoveBar.progress = player.currentMovePoint / player.maxMovePoint
+        
+        if player.currentMovePoint >= player.maxMovePoint {
+            isPlayerMoveValueMax = true
+            player.currentMovePoint = player.maxMovePoint
+        }else{
+            isPlayerMoveValueMax = false
+        }
+        
+        enemy.currentMovePoint = enemy.currentMovePoint + 1
+        enemyMoveBar.progress = enemy.currentMovePoint / enemy.maxMovePoint
+        
+        if enemy.currentMovePoint >= enemy.maxMovePoint {
+            self.enemyAttack()
+            enemy.currentMovePoint = 0
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -87,18 +123,84 @@ class ViewController: UIViewController {
             finishBattle(playerImageView, winplayer: false)
         }
     }
+
+    
+    @IBAction func attackAction() {
+        
+        if isPlayerMoveValueMax == true {
+            TechDraUtility.damageAnimation(enemyImageView)
+            util.playSE("SE_attack")
+            
+            enemy.currentHP = enemy.currentHP - player.attackPoint
+            enemyHPBar.setProgress(enemy.currentHP / enemy.maxHP, animated: true)
+            
+            player.currentTP = player.currentTP + 10
+            if player.currentTP >= player.maxTP {
+                player.currentTP = player.maxTP
+            }
+            playerTPBar.progress = player.currentTP / player.maxTP
+            
+            
+            player.currentMovePoint = 0
+            
+            if player.currentHP <= 0.0 {
+                finishBattle(playerImageView, winplayer: true)
+            }
+        }
+    }
+    
+    @IBAction func fireAction() {
+        if isPlayerMoveValueMax == true && player.currentTP >= 40 {
+            
+            TechDraUtility.damageAnimation(enemyImageView)
+            util.playSE("SE_fire")
+            
+            enemy.currentHP = enemy.currentHP - 100
+            enemyHPBar.setProgress(enemy.currentHP / enemy.maxHP, animated: true)
+            
+            player.currentTP = player.currentTP - 40
+            if player.currentTP <= 0 {
+                player.currentTP = 0
+            }
+            playerTPBar.progress = player.currentTP / player.maxTP
+            
+            player.currentMovePoint = 0
+            
+            if enemy.currentHP <= 0.0 {
+                finishBattle(enemyImageView, winplayer: true)
+            }
+        }
+    }
+    
+    @IBAction func tameruAction() {
+        if isPlayerMoveValueMax == true && player.currentTP >= 20{
+            player.attackPoint = player.attackPoint + 30
+            util.playSE("SE_change")
+        }
+    }
+    
+    
     
     func finishBattle(vanishImageView: UIImageView, winplayer: Bool) {
         TechDraUtility.vanishAnimation(vanishImageView)
         util.stopBGM()
-        timer.invalidate()
-        enemyTimer.invalidate()
+        moveValueUpTimer.invalidate()
+        isPlayerMoveValueMax = false
         
-        var finishedMesseage: String!
+        var finishedMesseage: String
         
         if attackButton.hidden != true {
             attackButton.hidden = true
         }
+        
+        if fireButton.hidden != true{
+            fireButton.hidden = true
+        }
+        
+        if tameruButton.hidden != true{
+            tameruButton.hidden = true
+        }
+        
         
         if winplayer == true {
             util.playSE("SE_fanfare")
@@ -119,8 +221,8 @@ class ViewController: UIViewController {
     
     //MARK: Cure
     func cureHP() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateHPValue", userInfo: nil, repeats: true)
-        timer.fire()
+        moveValueUpTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateHPValue", userInfo: nil, repeats: true)
+        moveValueUpTimer.fire()
     }
     
     func updateHPValue() {

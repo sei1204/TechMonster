@@ -23,7 +23,7 @@ class LobbyViewController: UIViewController,AVAudioPlayerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        player = Player()
+        player = Player(name: "紙", imageName: "yusya.png")
         
         staminaBar.transform = CGAffineTransformMakeScale(1.0,4.0)
         
@@ -31,10 +31,11 @@ class LobbyViewController: UIViewController,AVAudioPlayerDelegate {
         let level: Int = userDefaults.integerForKey("level")
         
         nameLabel.text = player.name
-        levellabel.text = String(format: "Lv", level + 1)
+        levellabel.text = String(format: "Lv. 15", level + 1)
         stamina = 100
         
         util = TechDraUtility()
+        
         cureStamina()
         
     }
@@ -45,6 +46,24 @@ class LobbyViewController: UIViewController,AVAudioPlayerDelegate {
     override func viewWillDisappear(animated: Bool) {
         util.stopBGM()
     }
+    
+    
+    @IBAction func battle() {
+        
+        if stamina >= 50 {
+            stamina = stamina - 50
+            staminaBar.progress = stamina / 100
+            
+            self.performSegueWithIdentifier("battle", sender: nil)
+        }else{
+            let aleat = UIAlertController(title: "バトルに行けません", message: "スタミナを溜めて下さい", preferredStyle: UIAlertControllerStyle.Alert)
+            aleat.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(aleat, animated: true, completion: nil)
+        }
+    }
+    
+    
+    
     //    MARK: Cure
     func cureStamina() {
         staminaTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateStaminaValue", userInfo: nil, repeats: true)
