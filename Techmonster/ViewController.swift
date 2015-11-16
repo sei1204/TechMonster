@@ -93,6 +93,11 @@ class ViewController: UIViewController {
             self.enemyAttack()
             enemy.currentMovePoint = 0
         }
+        
+        if player.currentMovePoint >= player.maxMovePoint {
+            self.playerAttack()
+            player.currentMovePoint = 0
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -100,7 +105,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func playerAttack() {
+    func playerAttack() {
         TechDraUtility.damageAnimation(enemyImageView)
         util.playSE("SE_attack")
         
@@ -175,7 +180,15 @@ class ViewController: UIViewController {
     @IBAction func tameruAction() {
         if isPlayerMoveValueMax == true && player.currentTP >= 20{
             player.attackPoint = player.attackPoint + 30
-            util.playSE("SE_change")
+            util.playSE("SE_charge")
+            
+            player.currentTP = player.currentTP - 20
+            if player.currentTP <= 0 {
+                player.currentTP = 0
+            }
+            playerTPBar.progress = player.currentTP / player.maxTP
+            
+            player.currentMovePoint = 0
         }
     }
     
@@ -225,17 +238,7 @@ class ViewController: UIViewController {
         moveValueUpTimer.fire()
     }
     
-    func updateHPValue() {
-        if enemy.currentHP < enemy.maxHP {
-            enemy.currentHP = enemy.currentHP + enemy.defencePoint
-            enemyHPBar.progress = enemy.currentHP / enemy.maxHP
-        }
-        
-        if player.currentHP < player.maxHP {
-            player.currentHP = player.currentHP + player.defencePoint
-            playerHPBar.progress = player.currentHP / player.maxHP
-        }
-    }
+    
 }
 
 

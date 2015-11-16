@@ -68,6 +68,9 @@
                                 <state key="normal" title="冒険に行く" backgroundImage="gold_button.png">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="battle" destination="BYZ-38-t0r" eventType="touchUpInside" id="kbC-IE-3eY"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="yusya.png" id="Xy2-f8-iPq">
                                 <rect key="frame" x="415" y="201" width="194" height="168"/>
@@ -160,6 +163,9 @@
                                 <state key="normal" title="ファイア" backgroundImage="gold_button.png">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="fireAction" destination="DtM-yh-PAF" eventType="touchUpInside" id="6Cr-hz-oL4"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="K9L-bn-pmy">
                                 <rect key="frame" x="678" y="504" width="244" height="152"/>
@@ -169,6 +175,9 @@
                                 <state key="normal" title="溜める" backgroundImage="gold_button.png">
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
+                                <connections>
+                                    <action selector="tameruAction" destination="DtM-yh-PAF" eventType="touchUpInside" id="AYO-WB-aFD"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WXf-i5-kXw">
                                 <rect key="frame" x="102" y="504" width="244" height="152"/>
@@ -178,6 +187,9 @@
                                 <state key="normal" title="攻撃" backgroundImage="gold_button.png">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="attackAction" destination="DtM-yh-PAF" eventType="touchUpInside" id="iOE-0u-RFd"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wjl-j7-IKK">
                                 <rect key="frame" x="193" y="181" width="50" height="34"/>
@@ -239,6 +251,21 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <connections>
+                        <outlet property="attackButton" destination="WXf-i5-kXw" id="Q7K-pv-woO"/>
+                        <outlet property="backgroundImageView" destination="xEx-6X-olD" id="dUa-nF-p0Q"/>
+                        <outlet property="enemyHPBar" destination="Jtx-CU-SSU" id="5eE-nZ-lrn"/>
+                        <outlet property="enemyImageView" destination="IK7-zO-Zwz" id="gk6-Lg-x77"/>
+                        <outlet property="enemyMoveBar" destination="YWu-Bm-Q0H" id="1AZ-Nz-6Dh"/>
+                        <outlet property="enemyNameLabel" destination="rLi-oa-mLb" id="C2I-a0-HU6"/>
+                        <outlet property="fireButton" destination="Xd7-fo-0Jp" id="aoe-h0-WT8"/>
+                        <outlet property="playerHPBar" destination="eUp-eH-shR" id="eWo-0e-ACj"/>
+                        <outlet property="playerImageView" destination="OaV-pT-UL2" id="Ldc-ma-gIR"/>
+                        <outlet property="playerMoveBar" destination="G9c-H0-95S" id="yDL-Rx-bhQ"/>
+                        <outlet property="playerNameLabel" destination="6vQ-sP-gc8" id="71h-K9-dht"/>
+                        <outlet property="playerTPBar" destination="mxt-7n-C2C" id="DpB-Mw-x7g"/>
+                        <outlet property="tameruButton" destination="K9L-bn-pmy" id="SAF-2i-rkq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="854-Qs-ZtI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
