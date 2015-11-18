@@ -67,7 +67,7 @@ class ViewController: UIViewController {
         playerHPBar.progress = player.currentHP / player.maxHP
         playerTPBar.progress = player.currentHP / player.maxHP
         
-        cureHP()
+//        cureHP()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -233,11 +233,11 @@ class ViewController: UIViewController {
     }
     
     //MARK: Cure
-    func cureHP() {
-        moveValueUpTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "updateHPValue", userInfo: nil, repeats: true)
+   /* func cureHP() {
+        moveValueUpTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: "moveValueUp", userInfo: nil, repeats: true)
         moveValueUpTimer.fire()
     }
-    
+    */
     
 }
 
